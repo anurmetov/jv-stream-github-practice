@@ -20,7 +20,8 @@ public class CandidateValidator implements Predicate<Candidate> {
 
         String[] parts = period.split("-");
         if (parts.length != 2) {
-            throw new IllegalArgumentException("Period must be in format 'YYYY-YYYY'. Got: " + period);
+            throw new IllegalArgumentException
+                    ("Period must be in format 'YYYY-YYYY'. Got: " + period);
         }
 
         try {
