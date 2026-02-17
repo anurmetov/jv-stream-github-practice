@@ -1,25 +1,18 @@
 package practice;
 
-import model.Candidate;
-
 import java.util.List;
 import java.util.function.Predicate;
+import model.Candidate;
 
-public class CandidateValidator {
+public class CandidateValidator implements Predicate<Candidate> {
     private static final String REQUIUERED_NATIONALITY = "Ukrainian";
     private static final int MIN_AGE = 35;
     private static final int MIN_RESIDENCY_YEARS_UKRAINE = 10;
 
     public List<String> areEligibleToApplyForPresidentPosition(List<Candidate> candidatesList) {
-        Predicate<Candidate> isEligibleForPresident = candidate ->
-                candidate.getAge() >= MIN_AGE
-                        && candidate.isAllowedToVote()
-                        && candidate.getNationality().equalsIgnoreCase(REQUIUERED_NATIONALITY)
-                        && livedYearsInUkraine(candidate) >= MIN_RESIDENCY_YEARS_UKRAINE;
-
         return candidatesList
                 .stream()
-                .filter(isEligibleForPresident)
+                .filter(this)
                 .map(Candidate::getName)
                 .sorted()
                 .toList();
@@ -28,5 +21,13 @@ public class CandidateValidator {
     private int livedYearsInUkraine(Candidate candidate) {
         return Integer.parseInt(candidate.getPeriodsInUkr().split("-")[1])
                 - Integer.parseInt(candidate.getPeriodsInUkr().split("-")[0]);
+    }
+
+    @Override
+    public boolean test(Candidate candidate) {
+        return candidate.getAge() >= MIN_AGE
+                        && candidate.isAllowedToVote()
+                        && candidate.getNationality().equalsIgnoreCase(REQUIUERED_NATIONALITY)
+                        && livedYearsInUkraine(candidate) >= MIN_RESIDENCY_YEARS_UKRAINE;
     }
 }
