@@ -119,8 +119,13 @@ public class StreamPractice {
      * We want to reuse our validation in future, so let's write our own impl of Predicate
      * parametrized with Candidate in CandidateValidator.
      */
+
     public List<String> validateCandidates(List<Candidate> candidates) {
-        CandidateValidator candidateValidator = new CandidateValidator();
-        return candidateValidator.areEligibleToApplyForPresidentPosition(candidates);
+        return candidates.stream()
+                .filter(new CandidateValidator()) //
+                .map(Candidate::getName)
+                .sorted()
+                .toList();
     }
+
 }
