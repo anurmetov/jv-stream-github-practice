@@ -105,7 +105,6 @@ public class StreamPractice {
                 .flatMap(List::stream)
                 .map(Cat::getName)
                 .toList();
-
     }
 
     /**
