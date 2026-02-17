@@ -9,9 +9,32 @@ public class CandidateValidator implements Predicate<Candidate> {
     private static final int MIN_RESIDENCY_YEARS_UKRAINE = 10;
 
     private int livedYearsInUkraine(Candidate candidate) {
-        String[] parts = candidate.getPeriodsInUkr().split("-");
-        return Integer.parseInt(parts[1])
-                - Integer.parseInt(parts[0]);
+        String period = candidate.getPeriodsInUkr();
+
+        if (period == null) {
+            throw new IllegalArgumentException("Period is null.");
+        }
+        if (period.isBlank()) {
+            throw new IllegalArgumentException("Period is empty.");
+        }
+
+        String[] parts = period.split("-");
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Period must be in format 'YYYY-YYYY'. Got: " + period);
+        }
+
+        try {
+            int start = Integer.parseInt(parts[0].trim());
+            int end = Integer.parseInt(parts[1].trim());
+
+            if (end < start) {
+                throw new IllegalArgumentException("End year cannot be smaller than start year.");
+            }
+
+            return end - start;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid year format in period: " + period, e);
+        }
     }
 
     @Override
